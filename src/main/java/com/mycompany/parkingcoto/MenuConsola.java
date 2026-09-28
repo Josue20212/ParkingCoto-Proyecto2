@@ -1,5 +1,6 @@
 package com.mycompany.parkingcoto;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuConsola {
@@ -40,9 +41,7 @@ public class MenuConsola {
                     break;
 
                 case 3:
-                    System.out.println(
-                            "Consultar espacios disponibles - pendiente"
-                    );
+                    consultarEspaciosDisponibles();
                     break;
 
                 case 4:
@@ -121,7 +120,7 @@ public class MenuConsola {
     }
 
     // =========================================================
-    // REGISTRAR VEHÍCULO
+    // 1. REGISTRAR VEHÍCULO
     // =========================================================
 
     private void registrarVehiculo() {
@@ -347,11 +346,6 @@ public class MenuConsola {
                 continue;
             }
 
-            /*
-             * El modelo se conserva tal como lo escribe
-             * el usuario porque puede contener nombres como:
-             * CX-5, MT-07, YZS, RAV4, i10, 911, etc.
-             */
             return modelo;
         }
     }
@@ -400,7 +394,7 @@ public class MenuConsola {
     }
 
     // =========================================================
-    // REGISTRAR ESPACIO
+    // 2. REGISTRAR ESPACIO
     // =========================================================
 
     private void registrarEspacio() {
@@ -533,6 +527,59 @@ public class MenuConsola {
             }
 
             return id;
+        }
+    }
+
+    // =========================================================
+    // 3. CONSULTAR ESPACIOS DISPONIBLES
+    // =========================================================
+
+    private void consultarEspaciosDisponibles() {
+        System.out.println("================================");
+        System.out.println("      ESPACIOS DISPONIBLES");
+        System.out.println("================================");
+
+        try {
+            List<EspacioParqueo> espacios =
+                    parqueo.consultarEspaciosDisponibles();
+
+            if (espacios == null || espacios.isEmpty()) {
+                System.out.println();
+                System.out.println(
+                        "No hay espacios disponibles actualmente."
+                );
+                return;
+            }
+
+            System.out.println();
+
+            for (EspacioParqueo espacio : espacios) {
+                System.out.println(
+                        "Identificador: " + espacio.getId()
+                );
+                System.out.println(
+                        "Tipo: " + espacio.getTipo()
+                );
+                System.out.println(
+                        "Estado: " + espacio.getEstado()
+                );
+                System.out.println(
+                        "--------------------------------"
+                );
+            }
+
+            System.out.println(
+                    "Total de espacios disponibles: "
+                    + espacios.size()
+            );
+
+        } catch (IllegalArgumentException
+                | IllegalStateException e) {
+
+            System.out.println();
+            System.out.println(
+                    "Error: " + e.getMessage()
+            );
         }
     }
 
