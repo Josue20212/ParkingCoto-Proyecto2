@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="ParkingCotoClassDiagram">
+  <ClassDiagramComponents>
+    <Class name="Vehiculo" package="" visibility="public" isAbstract="true" xPosition="232.0" yPosition="35.0">
+      <Fields>
+        <Field name="placa" type="String" visibility="private"/>
+        <Field name="marca" type="String" visibility="private"/>
+        <Field name="modelo" type="String" visibility="private"/>
+        <Field name="color" type="String" visibility="private"/>
+        <Field name="tipo" type="TipoVehiculo" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="placa"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="String" name="modelo"/>
+          <Argument type="String" name="color"/>
+          <Argument type="TipoVehiculo" name="tipo"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getPlaca" returnType="String" visibility="public"/>
+        <Method name="getMarca" returnType="String" visibility="public"/>
+        <Method name="getModelo" returnType="String" visibility="public"/>
+        <Method name="getColor" returnType="String" visibility="public"/>
+        <Method name="getTipo" returnType="TipoVehiculo" visibility="public"/>
+        <Method name="getTarifaPorHora" returnType="double" visibility="public" isAbstract="true"/>
+        <Method name="getTarifaMaximaDiaria" returnType="double" visibility="public" isAbstract="true"/>
+        <Method name="calcularMonto" returnType="double" visibility="public">
+          <Argument type="long" name="horas"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Enum name="TipoVehiculo" package="" visibility="public" xPosition="29.0" yPosition="35.0">
+      <Literals>
+        <Literal name="AUTOMOVIL"/>
+        <Literal name="MOTOCICLETA"/>
+        <Literal name="CARGA"/>
+      </Literals>
+    </Enum>
+    <Class name="Automovil" package="" visibility="public" xPosition="58.0" yPosition="460.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="getTarifaPorHora" returnType="double" visibility="public"/>
+        <Method name="getTarifaMaximaDiaria" returnType="double" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Motocicleta" package="" visibility="public" xPosition="364.0" yPosition="460.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="getTarifaPorHora" returnType="double" visibility="public"/>
+        <Method name="getTarifaMaximaDiaria" returnType="double" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="VehiculoCarga" package="" visibility="public" xPosition="626.0" yPosition="460.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="getTarifaPorHora" returnType="double" visibility="public"/>
+        <Method name="getTarifaMaximaDiaria" returnType="double" visibility="public"/>
+      </Methods>
+    </Class>
+    <Enum name="EstadoEspacio" package="" visibility="public" xPosition="735.0" yPosition="35.0">
+      <Literals>
+        <Literal name="DISPONIBLE"/>
+        <Literal name="OCUPADO"/>
+        <Literal name="FUERA_DE_SERVICIO"/>
+      </Literals>
+    </Enum>
+    <Class name="EspacioParqueo" package="" visibility="public" xPosition="876.0" yPosition="460.0">
+      <Fields>
+        <Field name="id" type="String" visibility="private"/>
+        <Field name="tipo" type="TipoEspacio" visibility="private"/>
+        <Field name="estado" type="EstadoEspacio" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="id"/>
+          <Argument type="TipoEspacio" name="tipo"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="estaDisponible" returnType="boolean" visibility="public"/>
+        <Method name="esCompatible" returnType="Vehiculo" visibility="public">
+          <Argument type="Vehiculo" name="vehiculo"/>
+        </Method>
+        <Method name="ocupar" returnType="void" visibility="public"/>
+        <Method name="liberar" returnType="void" visibility="public"/>
+        <Method name="ponerFueraDeServicio" returnType="void" visibility="public"/>
+        <Method name="getId" returnType="String" visibility="public"/>
+        <Method name="getTipo" returnType="TipoEspacio" visibility="public"/>
+        <Method name="getEstado" returnType="EstadoEspacio" visibility="public"/>
+      </Methods>
+    </Class>
+    <Enum name="TipoEspacio" package="" visibility="public" xPosition="929.0" yPosition="35.0">
+      <Literals>
+        <Literal name="AUTOMOVIL"/>
+        <Literal name="MOTOCICLETA"/>
+        <Literal name="CARGA"/>
+      </Literals>
+    </Enum>
+    <Enum name="EstadoTicket" package="" visibility="public" xPosition="735.0" yPosition="201.0">
+      <Literals>
+        <Literal name="ACTIVO"/>
+        <Literal name="CERRADO"/>
+        <Literal name="PAGADO"/>
+      </Literals>
+    </Enum>
+    <Class name="TicketParqueo" package="" visibility="public" xPosition="16.0" yPosition="788.0">
+      <Fields>
+        <Field name="numero" type="int" visibility="private"/>
+        <Field name="vehiculo" type="Vehiculo" visibility="private"/>
+        <Field name="espacio" type="EspacioParqueo" visibility="private"/>
+        <Field name="fechaHoraEntrada" type="LocalDateTime" visibility="private"/>
+        <Field name="fechaHoraSalida" type="LocalDateTime" visibility="private"/>
+        <Field name="estado" type="EstadoTicket" visibility="private"/>
+        <Field name="montoFinal" type="double" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="int" name="numero"/>
+          <Argument type="Vehiculo" name="vehiculo"/>
+          <Argument type="EspacioParqueo" name="espacio"/>
+          <Argument type="LocalDateTime" name="fechaHoraEntrada"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="estadActivo" returnType="boolean" visibility="public"/>
+        <Method name="calcularHorasCobradas" returnType="long" visibility="public"/>
+        <Method name="cerrar" returnType="LocalDateTime" visibility="public">
+          <Argument type="LocalDateTime" name="fechaHoraSalida"/>
+        </Method>
+        <Method name="marcarPagado" returnType="void" visibility="public"/>
+        <Method name="getNumero" returnType="int" visibility="public"/>
+        <Method name="getVehiculo" returnType="Vehiculo" visibility="public"/>
+        <Method name="getEspacio" returnType="EspacioParqueo" visibility="public"/>
+        <Method name="getFechaHoraEntrada" returnType="LocalDateTime" visibility="public"/>
+        <Method name="getFechaHoraSalida" returnType="LocalDateTime" visibility="public"/>
+        <Method name="getEstado" returnType="EstadoTicket" visibility="public"/>
+        <Method name="getMontoFinal" returnType="double" visibility="public"/>
+      </Methods>
+    </Class>
+    <Enum name="TipoPago" package="" visibility="public" xPosition="929.0" yPosition="201.0">
+      <Literals>
+        <Literal name="EFECTIVO"/>
+        <Literal name="TARJETA"/>
+        <Literal name="SINPE_MOVIL"/>
+      </Literals>
+    </Enum>
+    <Class name="Pago" package="" visibility="public" xPosition="876.0" yPosition="810.0">
+      <Fields>
+        <Field name="id" type="int" visibility="private"/>
+        <Field name="ticket" type="TicketParqueo" visibility="private"/>
+        <Field name="fechaHoraPago" type="LocalDateTime" visibility="private"/>
+        <Field name="monto" type="double" visibility="private"/>
+        <Field name="tipo" type="TipoPago" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="int" name="id"/>
+          <Argument type="TicketParqueo" name="ticket"/>
+          <Argument type="LocalDateTime" name="fechaHoraPago"/>
+          <Argument type="double" name="monto"/>
+          <Argument type="TipoPago" name="tipo"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getId" returnType="int" visibility="public"/>
+        <Method name="getTicket" returnType="TicketParqueo" visibility="public"/>
+        <Method name="getFechaHoraPago" returnType="LocalDateTime" visibility="public"/>
+        <Method name="getMonto" returnType="double" visibility="public"/>
+        <Method name="getTipo" returnType="TipoPago" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Parqueo" package="" visibility="public" xPosition="16.0" yPosition="1073.0">
+      <Fields>
+        <Field name="nombre" type="String" visibility="private"/>
+        <Field name="vehiculos" type="List&lt;Vehiculo&gt;" visibility="private"/>
+        <Field name="espacios" type="List&lt;EspacioParqueo&gt;" visibility="private"/>
+        <Field name="tickets" type="List&lt;TicketParqueo&gt;" visibility="private"/>
+        <Field name="pagos" type="List&lt;Pago&gt;" visibility="private"/>
+        <Field name="siguienteNumeroTicket" type="int" visibility="private"/>
+        <Field name="siguientePago" type="int" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="nombre"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="registrarVehiculo" returnType="void" visibility="public">
+          <Argument type="Vehiculo" name="vehiculo"/>
+        </Method>
+        <Method name="registrarEspacio" returnType="void" visibility="public">
+          <Argument type="EspacioParqueo" name="espacio"/>
+        </Method>
+        <Method name="consultarEspaciosDisponibles" returnType="List&lt;EspacioParqueo&gt;" visibility="public"/>
+        <Method name="buscarEspacioCompatible" returnType="EspacioParqueo" visibility="public">
+          <Argument type="Vehiculo" name="vehiculo"/>
+        </Method>
+        <Method name="registrarIngreso" returnType="TicketParqueo" visibility="public">
+          <Argument type="String" name="placa"/>
+          <Argument type="LocalDateTime" name="fechaHoraEntrada"/>
+        </Method>
+        <Method name="registrarSalida" returnType="TicketParqueo" visibility="public">
+          <Argument type="String" name="placa"/>
+          <Argument type="LocalDateTime" name="fechaHoraSalida"/>
+        </Method>
+        <Method name="registrarPago" returnType="Pago" visibility="public">
+          <Argument type="TicketParqueo" name="ticket"/>
+          <Argument type="TipoPago" name="tipo"/>
+          <Argument type="LocalDateTime" name="fechaHoraPago"/>
+        </Method>
+        <Method name="obtenerTicketsActivos" returnType="List&lt;TicketParqueo&gt;" visibility="public"/>
+        <Method name="obtenerVehiculosDentro" returnType="List&lt;Vehiculo&gt;" visibility="public"/>
+        <Method name="calcularIngresosTotales" returnType="double" visibility="public"/>
+        <Method name="obtenerOcupacion" returnType="int" visibility="public">
+          <Argument type="TipoEspacio" name="tipo"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="Has 2" source="TicketParqueo" target="EspacioParqueo" type="Default" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="Motocicleta" target="Vehiculo"/>
+    <HasRelation name="espacios" source="Parqueo" target="EspacioParqueo" type="Composition" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
+    <IsRelation name="is" source="VehiculoCarga" target="Vehiculo"/>
+    <IsRelation name="is" source="Automovil" target="Vehiculo"/>
+    <HasRelation name="vehiculos" source="Parqueo" target="Vehiculo" type="Aggregation" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
+    <HasRelation name="Has 1" source="TicketParqueo" target="Vehiculo" type="Default" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="tickets" source="Parqueo" target="TicketParqueo" type="Composition" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
+    <HasRelation name="Has 3" source="Pago" target="TicketParqueo" type="Default" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="pagos" source="Parqueo" target="Pago" type="Composition" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
