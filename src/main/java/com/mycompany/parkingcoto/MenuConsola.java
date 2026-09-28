@@ -40,56 +40,39 @@ public class MenuConsola {
                 case 1:
                     registrarVehiculo();
                     break;
-
                 case 2:
                     registrarEspacio();
                     break;
-
                 case 3:
                     consultarEspaciosDisponibles();
                     break;
-
                 case 4:
                     registrarIngreso();
                     break;
-
                 case 5:
                     consultarVehiculosDentro();
                     break;
-
                 case 6:
                     registrarSalida();
                     break;
-
                 case 7:
                     registrarPago();
                     break;
-
                 case 8:
-                    System.out.println(
-                            "Consultar tickets activos - pendiente"
-                    );
+                    consultarTicketsActivos();
                     break;
-
                 case 9:
-                    System.out.println(
-                            "Consultar ocupación por tipo - pendiente"
-                    );
+                    consultarOcupacionPorTipo();
                     break;
-
                 case 10:
-                    System.out.println(
-                            "Consultar ingresos totales - pendiente"
-                    );
+                    consultarIngresosTotales();
                     break;
-
                 case 11:
                     continuar = false;
                     System.out.println(
                             "Saliendo de Parking Coto..."
                     );
                     break;
-
                 default:
                     break;
             }
@@ -157,19 +140,16 @@ public class MenuConsola {
                         placa, marca, modelo, color
                 );
                 break;
-
             case 2:
                 vehiculo = new Motocicleta(
                         placa, marca, modelo, color
                 );
                 break;
-
             case 3:
                 vehiculo = new VehiculoCarga(
                         placa, marca, modelo, color
                 );
                 break;
-
             default:
                 throw new IllegalStateException(
                         "Tipo de vehículo no válido."
@@ -403,15 +383,12 @@ public class MenuConsola {
             case 1:
                 tipo = TipoEspacio.AUTOMOVIL;
                 break;
-
             case 2:
                 tipo = TipoEspacio.MOTOCICLETA;
                 break;
-
             case 3:
                 tipo = TipoEspacio.CARGA;
                 break;
-
             default:
                 throw new IllegalStateException(
                         "Tipo de espacio no válido."
@@ -655,7 +632,6 @@ public class MenuConsola {
                     "Ingreso registrado correctamente."
             );
             System.out.println("================================");
-
             System.out.println(
                     "Ticket: " + ticket.getNumero()
             );
@@ -885,7 +861,6 @@ public class MenuConsola {
                     "Salida registrada correctamente."
             );
             System.out.println("================================");
-
             System.out.println(
                     "Ticket: " + ticket.getNumero()
             );
@@ -1092,15 +1067,12 @@ public class MenuConsola {
             case 1:
                 tipoPago = TipoPago.EFECTIVO;
                 break;
-
             case 2:
                 tipoPago = TipoPago.TARJETA;
                 break;
-
             case 3:
                 tipoPago = TipoPago.SINPE_MOVIL;
                 break;
-
             default:
                 throw new IllegalStateException(
                         "Método de pago no válido."
@@ -1281,16 +1253,163 @@ public class MenuConsola {
         switch (tipoPago) {
             case EFECTIVO:
                 return "EFECTIVO";
-
             case TARJETA:
                 return "TARJETA";
-
             case SINPE_MOVIL:
                 return "SINPE MÓVIL";
-
             default:
                 return tipoPago.toString();
         }
+    }
+
+    // =========================================================
+    // 8. CONSULTAR TICKETS ACTIVOS
+    // =========================================================
+
+    private void consultarTicketsActivos() {
+        System.out.println("================================");
+        System.out.println("        TICKETS ACTIVOS");
+        System.out.println("================================");
+
+        List<TicketParqueo> tickets =
+                parqueo.obtenerTicketsActivos();
+
+        if (tickets.isEmpty()) {
+            System.out.println();
+            System.out.println(
+                    "No hay tickets activos actualmente."
+            );
+            return;
+        }
+
+        System.out.println();
+
+        for (TicketParqueo ticket : tickets) {
+            System.out.println(
+                    "Ticket: " + ticket.getNumero()
+            );
+            System.out.println(
+                    "Placa: "
+                    + ticket.getVehiculo().getPlaca()
+            );
+            System.out.println(
+                    "Marca: "
+                    + ticket.getVehiculo().getMarca()
+            );
+            System.out.println(
+                    "Modelo: "
+                    + ticket.getVehiculo().getModelo()
+            );
+            System.out.println(
+                    "Tipo: "
+                    + ticket.getVehiculo().getTipo()
+            );
+            System.out.println(
+                    "Espacio: "
+                    + ticket.getEspacio().getId()
+            );
+            System.out.println(
+                    "Hora de entrada: "
+                    + ticket.getFechaHoraEntrada()
+                            .format(FORMATO_FECHA)
+            );
+            System.out.println(
+                    "Estado: " + ticket.getEstado()
+            );
+            System.out.println("--------------------------------");
+        }
+
+        System.out.println(
+                "Total de tickets activos: "
+                + tickets.size()
+        );
+    }
+
+    // =========================================================
+    // 9. CONSULTAR OCUPACIÓN POR TIPO
+    // =========================================================
+
+    private void consultarOcupacionPorTipo() {
+        System.out.println("================================");
+        System.out.println("      OCUPACIÓN POR TIPO");
+        System.out.println("================================");
+
+        System.out.println();
+        System.out.println("Tipo de espacio:");
+        System.out.println("1. Automóvil");
+        System.out.println("2. Motocicleta");
+        System.out.println("3. Carga");
+        System.out.println("0. Cancelar");
+
+        int opcion =
+                leerEnteroEnRangoIncluyendoCero(
+                        "Seleccione el tipo: ",
+                        0,
+                        3
+                );
+
+        if (opcion == 0) {
+            System.out.println();
+            System.out.println(
+                    "Consulta de ocupación cancelada."
+            );
+            return;
+        }
+
+        TipoEspacio tipo;
+
+        switch (opcion) {
+            case 1:
+                tipo = TipoEspacio.AUTOMOVIL;
+                break;
+            case 2:
+                tipo = TipoEspacio.MOTOCICLETA;
+                break;
+            case 3:
+                tipo = TipoEspacio.CARGA;
+                break;
+            default:
+                throw new IllegalStateException(
+                        "Tipo de espacio no válido."
+                );
+        }
+
+        int ocupados =
+                parqueo.obtenerOcupacion(tipo);
+
+        System.out.println();
+        System.out.println("RESULTADO");
+        System.out.println("--------------------------------");
+        System.out.println("Tipo: " + tipo);
+        System.out.println(
+                "Espacios ocupados: " + ocupados
+        );
+    }
+
+    // =========================================================
+    // 10. CONSULTAR INGRESOS TOTALES
+    // =========================================================
+
+    private void consultarIngresosTotales() {
+        System.out.println("================================");
+        System.out.println("        INGRESOS TOTALES");
+        System.out.println("================================");
+
+        double total =
+                parqueo.calcularIngresosTotales();
+
+        System.out.println();
+
+        if (total == 0) {
+            System.out.println(
+                    "Todavía no se han registrado pagos."
+            );
+        }
+
+        System.out.printf(
+                "Total recaudado: CRC %.2f%n",
+                total
+        );
     }
 
     // =========================================================
