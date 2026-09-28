@@ -26,11 +26,15 @@ public class Parqueo {
 
     public void registrarVehiculo(Vehiculo vehiculo) {
         if (vehiculo == null) {
-            throw new IllegalArgumentException("El vehículo no puede ser nulo.");
+            throw new IllegalArgumentException(
+                    "El vehículo no puede ser nulo."
+            );
         }
 
         for (Vehiculo registrado : vehiculos) {
-            if (registrado.getPlaca().equalsIgnoreCase(vehiculo.getPlaca())) {
+            if (registrado.getPlaca()
+                    .equalsIgnoreCase(vehiculo.getPlaca())) {
+
                 throw new IllegalArgumentException(
                         "Ya existe un vehículo registrado con esa placa."
                 );
@@ -42,13 +46,18 @@ public class Parqueo {
 
     public void registrarEspacio(EspacioParqueo espacio) {
         if (espacio == null) {
-            throw new IllegalArgumentException("El espacio no puede ser nulo.");
+            throw new IllegalArgumentException(
+                    "El espacio no puede ser nulo."
+            );
         }
 
         for (EspacioParqueo registrado : espacios) {
-            if (registrado.getId().equalsIgnoreCase(espacio.getId())) {
+            if (registrado.getId()
+                    .equalsIgnoreCase(espacio.getId())) {
+
                 throw new IllegalArgumentException(
-                        "Ya existe un espacio registrado con ese identificador."
+                        "Ya existe un espacio registrado "
+                        + "con ese identificador."
                 );
             }
         }
@@ -68,15 +77,20 @@ public class Parqueo {
         return disponibles;
     }
 
-    public EspacioParqueo buscarEspacioCompatible(Vehiculo vehiculo) {
+    public EspacioParqueo buscarEspacioCompatible(
+            Vehiculo vehiculo) {
+
         for (EspacioParqueo espacio : espacios) {
-            if (espacio.estaDisponible() && espacio.esCompatible(vehiculo)) {
+            if (espacio.estaDisponible()
+                    && espacio.esCompatible(vehiculo)) {
+
                 return espacio;
             }
         }
 
         throw new IllegalStateException(
-                "No existe un espacio disponible compatible con el vehículo."
+                "No existe un espacio disponible "
+                + "compatible con el vehículo."
         );
     }
 
@@ -84,11 +98,14 @@ public class Parqueo {
             String placa,
             LocalDateTime fechaHoraEntrada) {
 
-        Vehiculo vehiculo = buscarVehiculoPorPlaca(placa);
+        Vehiculo vehiculo =
+                buscarVehiculoPorPlaca(placa);
 
         for (TicketParqueo ticket : tickets) {
             if (ticket.estaActivo()
-                    && ticket.getVehiculo().getPlaca().equalsIgnoreCase(placa)) {
+                    && ticket.getVehiculo()
+                            .getPlaca()
+                            .equalsIgnoreCase(placa)) {
 
                 throw new IllegalStateException(
                         "El vehículo ya tiene un ticket activo."
@@ -96,16 +113,18 @@ public class Parqueo {
             }
         }
 
-        EspacioParqueo espacio = buscarEspacioCompatible(vehiculo);
+        EspacioParqueo espacio =
+                buscarEspacioCompatible(vehiculo);
 
         espacio.ocupar();
 
-        TicketParqueo ticket = new TicketParqueo(
-                siguienteNumeroTicket,
-                vehiculo,
-                espacio,
-                fechaHoraEntrada
-        );
+        TicketParqueo ticket =
+                new TicketParqueo(
+                        siguienteNumeroTicket,
+                        vehiculo,
+                        espacio,
+                        fechaHoraEntrada
+                );
 
         siguienteNumeroTicket++;
         tickets.add(ticket);
@@ -117,7 +136,8 @@ public class Parqueo {
             String placa,
             LocalDateTime fechaHoraSalida) {
 
-        TicketParqueo ticket = buscarTicketActivo(placa);
+        TicketParqueo ticket =
+                buscarTicketActivo(placa);
 
         ticket.cerrar(fechaHoraSalida);
 
@@ -132,7 +152,9 @@ public class Parqueo {
             LocalDateTime fechaHoraPago) {
 
         if (ticket == null) {
-            throw new IllegalArgumentException("El ticket no puede ser nulo.");
+            throw new IllegalArgumentException(
+                    "El ticket no puede ser nulo."
+            );
         }
 
         if (!tickets.contains(ticket)) {
@@ -147,19 +169,22 @@ public class Parqueo {
             );
         }
 
-        if (ticket.getEstado() == EstadoTicket.PAGADO) {
+        if (ticket.getEstado()
+                == EstadoTicket.PAGADO) {
+
             throw new IllegalStateException(
                     "El ticket ya fue pagado."
             );
         }
 
-        Pago pago = new Pago(
-                siguienteIdPago,
-                ticket,
-                fechaHoraPago,
-                ticket.getMontoFinal(),
-                tipo
-        );
+        Pago pago =
+                new Pago(
+                        siguienteIdPago,
+                        ticket,
+                        fechaHoraPago,
+                        ticket.getMontoFinal(),
+                        tipo
+                );
 
         siguienteIdPago++;
         pagos.add(pago);
@@ -170,7 +195,8 @@ public class Parqueo {
     }
 
     public List<TicketParqueo> obtenerTicketsActivos() {
-        List<TicketParqueo> activos = new ArrayList<>();
+        List<TicketParqueo> activos =
+                new ArrayList<>();
 
         for (TicketParqueo ticket : tickets) {
             if (ticket.estaActivo()) {
@@ -181,12 +207,24 @@ public class Parqueo {
         return activos;
     }
 
+    /*
+     * Devuelve una copia de la lista de vehículos
+     * registrados para evitar exponer directamente
+     * la colección interna de Parqueo.
+     */
+    public List<Vehiculo> obtenerVehiculosRegistrados() {
+        return new ArrayList<>(vehiculos);
+    }
+
     public List<Vehiculo> obtenerVehiculosDentro() {
-        List<Vehiculo> dentro = new ArrayList<>();
+        List<Vehiculo> dentro =
+                new ArrayList<>();
 
         for (TicketParqueo ticket : tickets) {
             if (ticket.estaActivo()) {
-                dentro.add(ticket.getVehiculo());
+                dentro.add(
+                        ticket.getVehiculo()
+                );
             }
         }
 
@@ -203,12 +241,16 @@ public class Parqueo {
         return total;
     }
 
-    public int obtenerOcupacion(TipoEspacio tipo) {
+    public int obtenerOcupacion(
+            TipoEspacio tipo) {
+
         int ocupados = 0;
 
         for (EspacioParqueo espacio : espacios) {
             if (espacio.getTipo() == tipo
-                    && espacio.getEstado() == EstadoEspacio.OCUPADO) {
+                    && espacio.getEstado()
+                            == EstadoEspacio.OCUPADO) {
+
                 ocupados++;
             }
         }
@@ -216,22 +258,32 @@ public class Parqueo {
         return ocupados;
     }
 
-    private Vehiculo buscarVehiculoPorPlaca(String placa) {
+    private Vehiculo buscarVehiculoPorPlaca(
+            String placa) {
+
         for (Vehiculo vehiculo : vehiculos) {
-            if (vehiculo.getPlaca().equalsIgnoreCase(placa)) {
+            if (vehiculo.getPlaca()
+                    .equalsIgnoreCase(placa)) {
+
                 return vehiculo;
             }
         }
 
         throw new IllegalArgumentException(
-                "No existe un vehículo registrado con la placa " + placa + "."
+                "No existe un vehículo registrado "
+                + "con la placa " + placa + "."
         );
     }
 
-    private TicketParqueo buscarTicketActivo(String placa) {
+    private TicketParqueo buscarTicketActivo(
+            String placa) {
+
         for (TicketParqueo ticket : tickets) {
             if (ticket.estaActivo()
-                    && ticket.getVehiculo().getPlaca().equalsIgnoreCase(placa)) {
+                    && ticket.getVehiculo()
+                            .getPlaca()
+                            .equalsIgnoreCase(placa)) {
+
                 return ticket;
             }
         }

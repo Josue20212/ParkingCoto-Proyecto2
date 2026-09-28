@@ -1,5 +1,7 @@
 package com.mycompany.parkingcoto;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,6 +9,9 @@ public class MenuConsola {
 
     private final Parqueo parqueo;
     private final Scanner scanner;
+
+    private static final DateTimeFormatter FORMATO_FECHA =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     public MenuConsola(Parqueo parqueo) {
         if (parqueo == null) {
@@ -45,9 +50,7 @@ public class MenuConsola {
                     break;
 
                 case 4:
-                    System.out.println(
-                            "Registrar ingreso - pendiente"
-                    );
+                    registrarIngreso();
                     break;
 
                 case 5:
@@ -299,9 +302,7 @@ public class MenuConsola {
                 continue;
             }
 
-            if (!marca.matches(
-                    "[\\p{L}0-9 .&'-]+"
-            )) {
+            if (!marca.matches("[\\p{L}0-9 .&'-]+")) {
                 System.out.println(
                         "Error: la marca contiene "
                         + "caracteres no válidos."
@@ -336,9 +337,7 @@ public class MenuConsola {
                 continue;
             }
 
-            if (!modelo.matches(
-                    "[\\p{L}0-9 .&'/_-]+"
-            )) {
+            if (!modelo.matches("[\\p{L}0-9 .&'/_-]+")) {
                 System.out.println(
                         "Error: el modelo contiene "
                         + "caracteres no válidos."
@@ -346,6 +345,8 @@ public class MenuConsola {
                 continue;
             }
 
+            // No se modifica el uso de mayúsculas/minúsculas
+            // porque existen modelos como CX-5, MT-07, i10, etc.
             return modelo;
         }
     }
@@ -539,38 +540,220 @@ public class MenuConsola {
         System.out.println("      ESPACIOS DISPONIBLES");
         System.out.println("================================");
 
-        try {
-            List<EspacioParqueo> espacios =
-                    parqueo.consultarEspaciosDisponibles();
+        List<EspacioParqueo> espacios =
+                parqueo.consultarEspaciosDisponibles();
 
-            if (espacios == null || espacios.isEmpty()) {
-                System.out.println();
-                System.out.println(
-                        "No hay espacios disponibles actualmente."
-                );
-                return;
-            }
+        if (espacios.isEmpty()) {
+            System.out.println();
+            System.out.println(
+                    "No hay espacios disponibles actualmente."
+            );
+            return;
+        }
+
+        System.out.println();
+
+        for (EspacioParqueo espacio : espacios) {
+            System.out.println(
+                    "Identificador: " + espacio.getId()
+            );
+            System.out.println(
+                    "Tipo: " + espacio.getTipo()
+            );
+            System.out.println(
+                    "Estado: " + espacio.getEstado()
+            );
+            System.out.println(
+                    "--------------------------------"
+            );
+        }
+
+        System.out.println(
+                "Total de espacios disponibles: "
+                + espacios.size()
+        );
+    }
+
+    // =========================================================
+    // 4. REGISTRAR INGRESO
+    // =========================================================
+
+    private void registrarIngreso() {
+        System.out.println("================================");
+        System.out.println("        REGISTRAR INGRESO");
+        System.out.println("================================");
+
+        List<Vehiculo> vehiculos =
+                parqueo.obtenerVehiculosRegistrados();
+
+        if (vehiculos.isEmpty()) {
+            System.out.println();
+            System.out.println(
+                    "No hay vehículos registrados."
+            );
+            System.out.println(
+                    "Debe registrar un vehículo antes "
+                    + "de realizar un ingreso."
+            );
+            return;
+        }
+
+        System.out.println();
+        System.out.println("VEHÍCULOS REGISTRADOS");
+        System.out.println("--------------------------------");
+
+        for (Vehiculo vehiculo : vehiculos) {
+            System.out.println(
+                    "Placa: " + vehiculo.getPlaca()
+            );
+            System.out.println(
+                    "Marca: " + vehiculo.getMarca()
+            );
+            System.out.println(
+                    "Modelo: " + vehiculo.getModelo()
+            );
+            System.out.println(
+                    "Tipo: " + vehiculo.getTipo()
+            );
+            System.out.println(
+                    "--------------------------------"
+            );
+        }
+
+        System.out.println(
+                "Total de vehículos registrados: "
+                + vehiculos.size()
+        );
+
+        List<EspacioParqueo> espacios =
+                parqueo.consultarEspaciosDisponibles();
+
+        System.out.println();
+        System.out.println("ESPACIOS DISPONIBLES");
+        System.out.println("--------------------------------");
+
+        if (espacios.isEmpty()) {
+            System.out.println(
+                    "No hay espacios disponibles actualmente."
+            );
+            System.out.println();
+            System.out.println(
+                    "No es posible registrar un ingreso "
+                    + "en este momento."
+            );
+            return;
+        }
+
+        for (EspacioParqueo espacio : espacios) {
+            System.out.println(
+                    "Identificador: " + espacio.getId()
+            );
+            System.out.println(
+                    "Tipo: " + espacio.getTipo()
+            );
+            System.out.println(
+                    "Estado: " + espacio.getEstado()
+            );
+            System.out.println(
+                    "--------------------------------"
+            );
+        }
+
+        System.out.println(
+                "Total de espacios disponibles: "
+                + espacios.size()
+        );
+
+        System.out.println();
+        System.out.println(
+                "El sistema asignará automáticamente "
+                + "un espacio compatible."
+        );
+        System.out.println(
+                "Ingrese 0 para cancelar."
+        );
+        System.out.println();
+
+        String placa = leerPlacaIngreso();
+
+        if (placa == null) {
+            System.out.println();
+            System.out.println(
+                    "Registro de ingreso cancelado."
+            );
+            return;
+        }
+
+        try {
+            LocalDateTime fechaHoraEntrada =
+                    LocalDateTime.now();
+
+            TicketParqueo ticket =
+                    parqueo.registrarIngreso(
+                            placa,
+                            fechaHoraEntrada
+                    );
 
             System.out.println();
-
-            for (EspacioParqueo espacio : espacios) {
-                System.out.println(
-                        "Identificador: " + espacio.getId()
-                );
-                System.out.println(
-                        "Tipo: " + espacio.getTipo()
-                );
-                System.out.println(
-                        "Estado: " + espacio.getEstado()
-                );
-                System.out.println(
-                        "--------------------------------"
-                );
-            }
+            System.out.println(
+                    "Ingreso registrado correctamente."
+            );
+            System.out.println(
+                    "================================"
+            );
 
             System.out.println(
-                    "Total de espacios disponibles: "
-                    + espacios.size()
+                    "Ticket: " + ticket.getNumero()
+            );
+            System.out.println(
+                    "Estado: " + ticket.getEstado()
+            );
+
+            System.out.println();
+            System.out.println("VEHÍCULO");
+            System.out.println(
+                    "--------------------------------"
+            );
+            System.out.println(
+                    "Placa: "
+                    + ticket.getVehiculo().getPlaca()
+            );
+            System.out.println(
+                    "Marca: "
+                    + ticket.getVehiculo().getMarca()
+            );
+            System.out.println(
+                    "Modelo: "
+                    + ticket.getVehiculo().getModelo()
+            );
+            System.out.println(
+                    "Tipo: "
+                    + ticket.getVehiculo().getTipo()
+            );
+
+            System.out.println();
+            System.out.println("ESPACIO ASIGNADO");
+            System.out.println(
+                    "--------------------------------"
+            );
+            System.out.println(
+                    "Identificador: "
+                    + ticket.getEspacio().getId()
+            );
+            System.out.println(
+                    "Tipo: "
+                    + ticket.getEspacio().getTipo()
+            );
+            System.out.println(
+                    "Estado: "
+                    + ticket.getEspacio().getEstado()
+            );
+
+            System.out.println();
+            System.out.println(
+                    "Hora de entrada: "
+                    + ticket.getFechaHoraEntrada()
+                            .format(FORMATO_FECHA)
             );
 
         } catch (IllegalArgumentException
@@ -580,6 +763,57 @@ public class MenuConsola {
             System.out.println(
                     "Error: " + e.getMessage()
             );
+        }
+    }
+
+    private String leerPlacaIngreso() {
+        while (true) {
+            System.out.print(
+                    "Placa del vehículo: "
+            );
+
+            String placa = scanner.nextLine()
+                    .trim()
+                    .toUpperCase();
+
+            if (placa.equals("0")) {
+                return null;
+            }
+
+            if (placa.isEmpty()) {
+                System.out.println(
+                        "Error: la placa no puede estar vacía."
+                );
+                continue;
+            }
+
+            if (placa.length() < 3
+                    || placa.length() > 15) {
+
+                System.out.println(
+                        "Error: la placa debe tener entre "
+                        + "3 y 15 caracteres."
+                );
+                continue;
+            }
+
+            if (!placa.matches("[A-Z0-9-]+")) {
+                System.out.println(
+                        "Error: la placa solo puede contener "
+                        + "letras, números y guiones."
+                );
+                continue;
+            }
+
+            if (!contieneLetra(placa)) {
+                System.out.println(
+                        "Error: la placa debe contener "
+                        + "al menos una letra."
+                );
+                continue;
+            }
+
+            return placa;
         }
     }
 
@@ -646,8 +880,7 @@ public class MenuConsola {
     private int leerEnteroEnRango(
             String mensaje,
             int minimo,
-            int maximo
-    ) {
+            int maximo) {
 
         while (true) {
             System.out.print(mensaje);
