@@ -36,9 +36,7 @@ public class MenuConsola {
                     break;
 
                 case 2:
-                    System.out.println(
-                            "Registrar espacio - pendiente"
-                    );
+                    registrarEspacio();
                     break;
 
                 case 3:
@@ -122,6 +120,10 @@ public class MenuConsola {
         System.out.println("================================");
     }
 
+    // =========================================================
+    // REGISTRAR VEHÍCULO
+    // =========================================================
+
     private void registrarVehiculo() {
         System.out.println("================================");
         System.out.println("       REGISTRAR VEHÍCULO");
@@ -160,28 +162,19 @@ public class MenuConsola {
         switch (opcionTipo) {
             case 1:
                 vehiculo = new Automovil(
-                        placa,
-                        marca,
-                        modelo,
-                        color
+                        placa, marca, modelo, color
                 );
                 break;
 
             case 2:
                 vehiculo = new Motocicleta(
-                        placa,
-                        marca,
-                        modelo,
-                        color
+                        placa, marca, modelo, color
                 );
                 break;
 
             case 3:
                 vehiculo = new VehiculoCarga(
-                        placa,
-                        marca,
-                        modelo,
-                        color
+                        placa, marca, modelo, color
                 );
                 break;
 
@@ -355,9 +348,8 @@ public class MenuConsola {
             }
 
             /*
-             * El modelo NO se capitaliza automáticamente.
-             *
-             * Esto permite conservar correctamente nombres como:
+             * El modelo se conserva tal como lo escribe
+             * el usuario porque puede contener nombres como:
              * CX-5, MT-07, YZS, RAV4, i10, 911, etc.
              */
             return modelo;
@@ -406,6 +398,147 @@ public class MenuConsola {
             return capitalizarPalabras(color);
         }
     }
+
+    // =========================================================
+    // REGISTRAR ESPACIO
+    // =========================================================
+
+    private void registrarEspacio() {
+        System.out.println("================================");
+        System.out.println("        REGISTRAR ESPACIO");
+        System.out.println("================================");
+        System.out.println(
+                "Ingrese 0 en el identificador para cancelar."
+        );
+        System.out.println();
+
+        String id = leerIdentificadorEspacio();
+
+        if (id == null) {
+            System.out.println();
+            System.out.println(
+                    "Registro de espacio cancelado."
+            );
+            return;
+        }
+
+        System.out.println();
+        System.out.println("Tipo de espacio:");
+        System.out.println("1. Automóvil");
+        System.out.println("2. Motocicleta");
+        System.out.println("3. Carga");
+
+        int opcionTipo = leerEnteroEnRango(
+                "Seleccione el tipo: ", 1, 3
+        );
+
+        TipoEspacio tipo;
+
+        switch (opcionTipo) {
+            case 1:
+                tipo = TipoEspacio.AUTOMOVIL;
+                break;
+
+            case 2:
+                tipo = TipoEspacio.MOTOCICLETA;
+                break;
+
+            case 3:
+                tipo = TipoEspacio.CARGA;
+                break;
+
+            default:
+                throw new IllegalStateException(
+                        "Tipo de espacio no válido."
+                );
+        }
+
+        try {
+            EspacioParqueo espacio =
+                    new EspacioParqueo(id, tipo);
+
+            parqueo.registrarEspacio(espacio);
+
+            System.out.println();
+            System.out.println(
+                    "Espacio registrado correctamente."
+            );
+            System.out.println(
+                    "--------------------------------"
+            );
+            System.out.println(
+                    "Identificador: " + espacio.getId()
+            );
+            System.out.println(
+                    "Tipo: " + espacio.getTipo()
+            );
+            System.out.println(
+                    "Estado: " + espacio.getEstado()
+            );
+
+        } catch (IllegalArgumentException
+                | IllegalStateException e) {
+
+            System.out.println();
+            System.out.println(
+                    "Error: " + e.getMessage()
+            );
+        }
+    }
+
+    private String leerIdentificadorEspacio() {
+        while (true) {
+            System.out.print("Identificador: ");
+
+            String id = scanner.nextLine()
+                    .trim()
+                    .toUpperCase();
+
+            if (id.equals("0")) {
+                return null;
+            }
+
+            if (id.isEmpty()) {
+                System.out.println(
+                        "Error: el identificador no puede "
+                        + "estar vacío."
+                );
+                continue;
+            }
+
+            if (id.length() < 2
+                    || id.length() > 15) {
+
+                System.out.println(
+                        "Error: el identificador debe tener "
+                        + "entre 2 y 15 caracteres."
+                );
+                continue;
+            }
+
+            if (!id.matches("[A-Z0-9-]+")) {
+                System.out.println(
+                        "Error: el identificador solo puede "
+                        + "contener letras, números y guiones."
+                );
+                continue;
+            }
+
+            if (!contieneLetra(id)) {
+                System.out.println(
+                        "Error: el identificador debe contener "
+                        + "al menos una letra."
+                );
+                continue;
+            }
+
+            return id;
+        }
+    }
+
+    // =========================================================
+    // MÉTODOS AUXILIARES
+    // =========================================================
 
     private String normalizarEspacios(String texto) {
         return texto.trim().replaceAll("\\s+", " ");
