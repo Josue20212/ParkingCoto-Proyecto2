@@ -24,6 +24,10 @@ public class Parqueo {
         this.siguienteIdPago = 1;
     }
 
+    // =========================================================
+    // REGISTRAR VEHÍCULO
+    // =========================================================
+
     public void registrarVehiculo(Vehiculo vehiculo) {
         if (vehiculo == null) {
             throw new IllegalArgumentException(
@@ -43,6 +47,10 @@ public class Parqueo {
 
         vehiculos.add(vehiculo);
     }
+
+    // =========================================================
+    // REGISTRAR ESPACIO
+    // =========================================================
 
     public void registrarEspacio(EspacioParqueo espacio) {
         if (espacio == null) {
@@ -65,8 +73,13 @@ public class Parqueo {
         espacios.add(espacio);
     }
 
+    // =========================================================
+    // CONSULTAR ESPACIOS DISPONIBLES
+    // =========================================================
+
     public List<EspacioParqueo> consultarEspaciosDisponibles() {
-        List<EspacioParqueo> disponibles = new ArrayList<>();
+        List<EspacioParqueo> disponibles =
+                new ArrayList<>();
 
         for (EspacioParqueo espacio : espacios) {
             if (espacio.estaDisponible()) {
@@ -76,6 +89,10 @@ public class Parqueo {
 
         return disponibles;
     }
+
+    // =========================================================
+    // BUSCAR ESPACIO COMPATIBLE
+    // =========================================================
 
     public EspacioParqueo buscarEspacioCompatible(
             Vehiculo vehiculo) {
@@ -93,6 +110,10 @@ public class Parqueo {
                 + "compatible con el vehículo."
         );
     }
+
+    // =========================================================
+    // REGISTRAR INGRESO
+    // =========================================================
 
     public TicketParqueo registrarIngreso(
             String placa,
@@ -132,6 +153,10 @@ public class Parqueo {
         return ticket;
     }
 
+    // =========================================================
+    // REGISTRAR SALIDA
+    // =========================================================
+
     public TicketParqueo registrarSalida(
             String placa,
             LocalDateTime fechaHoraSalida) {
@@ -145,6 +170,10 @@ public class Parqueo {
 
         return ticket;
     }
+
+    // =========================================================
+    // REGISTRAR PAGO
+    // =========================================================
 
     public Pago registrarPago(
             TicketParqueo ticket,
@@ -177,6 +206,18 @@ public class Parqueo {
             );
         }
 
+        if (tipo == null) {
+            throw new IllegalArgumentException(
+                    "El tipo de pago no puede ser nulo."
+            );
+        }
+
+        if (fechaHoraPago == null) {
+            throw new IllegalArgumentException(
+                    "La fecha y hora de pago no pueden ser nulas."
+            );
+        }
+
         Pago pago =
                 new Pago(
                         siguienteIdPago,
@@ -194,6 +235,10 @@ public class Parqueo {
         return pago;
     }
 
+    // =========================================================
+    // OBTENER TICKETS ACTIVOS
+    // =========================================================
+
     public List<TicketParqueo> obtenerTicketsActivos() {
         List<TicketParqueo> activos =
                 new ArrayList<>();
@@ -207,6 +252,29 @@ public class Parqueo {
         return activos;
     }
 
+    // =========================================================
+    // OBTENER TICKETS PENDIENTES DE PAGO
+    // =========================================================
+
+    public List<TicketParqueo> obtenerTicketsPendientesPago() {
+        List<TicketParqueo> pendientes =
+                new ArrayList<>();
+
+        for (TicketParqueo ticket : tickets) {
+            if (ticket.getEstado()
+                    == EstadoTicket.CERRADO) {
+
+                pendientes.add(ticket);
+            }
+        }
+
+        return pendientes;
+    }
+
+    // =========================================================
+    // OBTENER VEHÍCULOS REGISTRADOS
+    // =========================================================
+
     /*
      * Devuelve una copia de la lista de vehículos
      * registrados para evitar exponer directamente
@@ -215,6 +283,10 @@ public class Parqueo {
     public List<Vehiculo> obtenerVehiculosRegistrados() {
         return new ArrayList<>(vehiculos);
     }
+
+    // =========================================================
+    // OBTENER VEHÍCULOS DENTRO
+    // =========================================================
 
     public List<Vehiculo> obtenerVehiculosDentro() {
         List<Vehiculo> dentro =
@@ -231,6 +303,10 @@ public class Parqueo {
         return dentro;
     }
 
+    // =========================================================
+    // CALCULAR INGRESOS TOTALES
+    // =========================================================
+
     public double calcularIngresosTotales() {
         double total = 0;
 
@@ -240,6 +316,10 @@ public class Parqueo {
 
         return total;
     }
+
+    // =========================================================
+    // OBTENER OCUPACIÓN POR TIPO
+    // =========================================================
 
     public int obtenerOcupacion(
             TipoEspacio tipo) {
@@ -258,6 +338,10 @@ public class Parqueo {
         return ocupados;
     }
 
+    // =========================================================
+    // BUSCAR VEHÍCULO POR PLACA
+    // =========================================================
+
     private Vehiculo buscarVehiculoPorPlaca(
             String placa) {
 
@@ -274,6 +358,10 @@ public class Parqueo {
                 + "con la placa " + placa + "."
         );
     }
+
+    // =========================================================
+    // BUSCAR TICKET ACTIVO
+    // =========================================================
 
     private TicketParqueo buscarTicketActivo(
             String placa) {
@@ -292,6 +380,10 @@ public class Parqueo {
                 "El vehículo no tiene un ticket activo."
         );
     }
+
+    // =========================================================
+    // GETTERS
+    // =========================================================
 
     public String getNombre() {
         return nombre;
