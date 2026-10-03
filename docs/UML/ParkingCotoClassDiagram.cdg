@@ -32,13 +32,6 @@
         </Method>
       </Methods>
     </Class>
-    <Enum name="TipoVehiculo" package="" visibility="public" xPosition="29.0" yPosition="35.0">
-      <Literals>
-        <Literal name="AUTOMOVIL"/>
-        <Literal name="MOTOCICLETA"/>
-        <Literal name="CARGA"/>
-      </Literals>
-    </Enum>
     <Class name="Automovil" package="" visibility="public" xPosition="58.0" yPosition="460.0">
       <Fields/>
       <Constructors/>
@@ -63,13 +56,6 @@
         <Method name="getTarifaMaximaDiaria" returnType="double" visibility="public"/>
       </Methods>
     </Class>
-    <Enum name="EstadoEspacio" package="" visibility="public" xPosition="735.0" yPosition="35.0">
-      <Literals>
-        <Literal name="DISPONIBLE"/>
-        <Literal name="OCUPADO"/>
-        <Literal name="FUERA_DE_SERVICIO"/>
-      </Literals>
-    </Enum>
     <Class name="EspacioParqueo" package="" visibility="public" xPosition="876.0" yPosition="460.0">
       <Fields>
         <Field name="id" type="String" visibility="private"/>
@@ -95,20 +81,6 @@
         <Method name="getEstado" returnType="EstadoEspacio" visibility="public"/>
       </Methods>
     </Class>
-    <Enum name="TipoEspacio" package="" visibility="public" xPosition="929.0" yPosition="35.0">
-      <Literals>
-        <Literal name="AUTOMOVIL"/>
-        <Literal name="MOTOCICLETA"/>
-        <Literal name="CARGA"/>
-      </Literals>
-    </Enum>
-    <Enum name="EstadoTicket" package="" visibility="public" xPosition="735.0" yPosition="201.0">
-      <Literals>
-        <Literal name="ACTIVO"/>
-        <Literal name="CERRADO"/>
-        <Literal name="PAGADO"/>
-      </Literals>
-    </Enum>
     <Class name="TicketParqueo" package="" visibility="public" xPosition="16.0" yPosition="788.0">
       <Fields>
         <Field name="numero" type="int" visibility="private"/>
@@ -143,13 +115,6 @@
         <Method name="getMontoFinal" returnType="double" visibility="public"/>
       </Methods>
     </Class>
-    <Enum name="TipoPago" package="" visibility="public" xPosition="929.0" yPosition="201.0">
-      <Literals>
-        <Literal name="EFECTIVO"/>
-        <Literal name="TARJETA"/>
-        <Literal name="SINPE_MOVIL"/>
-      </Literals>
-    </Enum>
     <Class name="Pago" package="" visibility="public" xPosition="876.0" yPosition="810.0">
       <Fields>
         <Field name="id" type="int" visibility="private"/>
@@ -175,7 +140,7 @@
         <Method name="getTipo" returnType="TipoPago" visibility="public"/>
       </Methods>
     </Class>
-    <Class name="Parqueo" package="" visibility="public" xPosition="16.0" yPosition="1073.0">
+    <Class name="Parqueo" package="" visibility="public" xPosition="58.0" yPosition="1309.0">
       <Fields>
         <Field name="nombre" type="String" visibility="private"/>
         <Field name="vehiculos" type="List&lt;Vehiculo&gt;" visibility="private"/>
@@ -222,17 +187,52 @@
         </Method>
       </Methods>
     </Class>
+    <Enum name="TipoVehiculo" package="" visibility="public" xPosition="29.0" yPosition="35.0">
+      <Literals>
+        <Literal name="AUTOMOVIL"/>
+        <Literal name="MOTOCICLETA"/>
+        <Literal name="CARGA"/>
+      </Literals>
+    </Enum>
+    <Enum name="EstadoEspacio" package="" visibility="public" xPosition="735.0" yPosition="35.0">
+      <Literals>
+        <Literal name="DISPONIBLE"/>
+        <Literal name="OCUPADO"/>
+        <Literal name="FUERA_DE_SERVICIO"/>
+      </Literals>
+    </Enum>
+    <Enum name="TipoEspacio" package="" visibility="public" xPosition="929.0" yPosition="35.0">
+      <Literals>
+        <Literal name="AUTOMOVIL"/>
+        <Literal name="MOTOCICLETA"/>
+        <Literal name="CARGA"/>
+      </Literals>
+    </Enum>
+    <Enum name="EstadoTicket" package="" visibility="public" xPosition="735.0" yPosition="201.0">
+      <Literals>
+        <Literal name="ACTIVO"/>
+        <Literal name="CERRADO"/>
+        <Literal name="PAGADO"/>
+      </Literals>
+    </Enum>
+    <Enum name="TipoPago" package="" visibility="public" xPosition="929.0" yPosition="201.0">
+      <Literals>
+        <Literal name="EFECTIVO"/>
+        <Literal name="TARJETA"/>
+        <Literal name="SINPE_MOVIL"/>
+      </Literals>
+    </Enum>
   </ClassDiagramComponents>
   <ClassDiagramRelations>
-    <HasRelation name="Has 2" source="TicketParqueo" target="EspacioParqueo" type="Default" sourceCardinality="0..1" targetCardinality="1..1"/>
-    <IsRelation name="is" source="Motocicleta" target="Vehiculo"/>
-    <HasRelation name="espacios" source="Parqueo" target="EspacioParqueo" type="Composition" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
+    <HasRelation name="pagos" source="Parqueo" target="Pago" type="Composition" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
     <IsRelation name="is" source="VehiculoCarga" target="Vehiculo"/>
-    <IsRelation name="is" source="Automovil" target="Vehiculo"/>
-    <HasRelation name="vehiculos" source="Parqueo" target="Vehiculo" type="Aggregation" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
-    <HasRelation name="Has 1" source="TicketParqueo" target="Vehiculo" type="Default" sourceCardinality="0..1" targetCardinality="1..1"/>
     <HasRelation name="tickets" source="Parqueo" target="TicketParqueo" type="Composition" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
     <HasRelation name="Has 3" source="Pago" target="TicketParqueo" type="Default" sourceCardinality="0..1" targetCardinality="1..1"/>
-    <HasRelation name="pagos" source="Parqueo" target="Pago" type="Composition" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
+    <HasRelation name="espacios" source="Parqueo" target="EspacioParqueo" type="Composition" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
+    <HasRelation name="Has 1" source="TicketParqueo" target="Vehiculo" type="Default" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="Automovil" target="Vehiculo"/>
+    <IsRelation name="is" source="Motocicleta" target="Vehiculo"/>
+    <HasRelation name="Has 2" source="TicketParqueo" target="EspacioParqueo" type="Default" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="vehiculos" source="Parqueo" target="Vehiculo" type="Aggregation" sourceCardinality="0..1" targetCardinality="0..*" collectionType="List"/>
   </ClassDiagramRelations>
 </ClassDiagram>
